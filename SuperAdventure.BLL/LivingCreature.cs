@@ -4,12 +4,6 @@ namespace SuperAdventure.BLL
 {
     public class LivingCreature : INotifyPropertyChanged
     {
-        public LivingCreature(int currentHitPoints, int maximumHitPoints)
-        {
-            CurrentHitPoints = currentHitPoints;
-            MaximumHitPoints = maximumHitPoints;
-        }
-
         private int _currentHitPoints;
         public int CurrentHitPoints
         {
@@ -20,7 +14,16 @@ namespace SuperAdventure.BLL
                 OnPropertyChanged("CurrentHitPoints");
             }
         }
+
         public int MaximumHitPoints { get; set; }
+
+        public bool IsDead { get { return CurrentHitPoints <= 0; } }
+
+        public LivingCreature(int currentHitPoints, int maximumHitPoints)
+        {
+            CurrentHitPoints = currentHitPoints;
+            MaximumHitPoints = maximumHitPoints;
+        }
 
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged(string name)

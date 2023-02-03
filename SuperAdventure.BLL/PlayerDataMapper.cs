@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SuperAdventure.BLL
 {
@@ -92,7 +88,7 @@ namespace SuperAdventure.BLL
                     return player;
                 }
             }
-            catch (Exception ex)
+            catch
             {
                 // Ignore errors. If there is an error, this function will return a "null" player.
             }

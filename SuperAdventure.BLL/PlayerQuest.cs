@@ -4,14 +4,9 @@ namespace SuperAdventure.BLL
 {
     public class PlayerQuest : INotifyPropertyChanged
     {
-        public PlayerQuest(Quest details)
-        {
-            Details = details;
-            IsCompleted = false;
-        }
-
         private Quest _details;
         private bool _isCompleted;
+        
         public Quest Details
         {
             get { return _details; }
@@ -35,11 +30,13 @@ namespace SuperAdventure.BLL
         {
             get { return Details.Name; }
         }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected void OnPropertyChanged(string name)
+        public PlayerQuest(Quest details)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+            Details = details;
+            IsCompleted = false;
         }
+        public event PropertyChangedEventHandler PropertyChanged;
+       
+        protected void OnPropertyChanged(string name) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
     }
 }

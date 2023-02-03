@@ -4,16 +4,6 @@ namespace SuperAdventure.BLL
 {
     public class Quest
     {
-        public Quest(int id, string name, string description, int rewardExperiencePoints, int rewardGold)
-        {
-            Id = id;
-            Name = name;
-            Description = description;
-            RewardExperiencePoints = rewardExperiencePoints;
-            RewardGold = rewardGold;
-            QuestCompletionItems = new List<QuestCompletionItem>();
-        }
-
         public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
@@ -23,5 +13,15 @@ namespace SuperAdventure.BLL
         public Item RewardItem { get; set; }
 
         public List<QuestCompletionItem> QuestCompletionItems { get; set; }
+
+        public Quest(int id, string name, string description, int rewardExperiencePoints, int rewardGold)
+        {
+            Id = id;
+            Name = name;
+            Description = description;
+            RewardExperiencePoints = rewardExperiencePoints;
+            RewardGold = rewardGold;
+            QuestCompletionItems = new List<QuestCompletionItem>();
+        }
     }
 }

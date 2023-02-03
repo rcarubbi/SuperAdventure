@@ -8,9 +8,9 @@ namespace SuperAdventure.BLL
         public static readonly List<Monster> Monsters = new List<Monster>();
         public static readonly List<Quest> Quests = new List<Quest>();
         public static readonly List<Location> Locations = new List<Location>();
-
+        
         public const int UNSELLABLE_ITEM_PRICE = -1;
-
+        
         public const int ITEM_ID_RUSTY_SWORD = 1;
         public const int ITEM_ID_RAT_TAIL = 2;
         public const int ITEM_ID_PIECE_OF_FUR = 3;
@@ -135,12 +135,8 @@ namespace SuperAdventure.BLL
 
             Location bridge = new Location(LOCATION_ID_BRIDGE, "Bridge", "A stone bridge crosses a wide river.");
 
-            Location spiderField = new Location(LOCATION_ID_SPIDER_FIELD, "Forest", "You see spider webs covering covering the trees in this forest.");
+            Location spiderField = new Location(LOCATION_ID_SPIDER_FIELD, "Forest", "You see spider webs covering the trees in this forest.");
             spiderField.MonsterLivingHere = MonsterByID(MONSTER_ID_GIANT_SPIDER);
-
-           
-           
-
 
             // Link the locations together
             home.LocationToNorth = townSquare;
