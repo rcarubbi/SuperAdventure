@@ -134,10 +134,10 @@ namespace SuperAdventure.UI
 
 
                 btnUseWeapon.Visible = 
-                    cboWeapons.Visible = _player.CurrentLocation.MonsterLivingHere != null && _player.Weapons.Any();
+                    cboWeapons.Visible = _player.CurrentLocation.HasAMonster && _player.Weapons.Any();
                 
                 btnUsePotion.Visible = 
-                    cboPotions.Visible = _player.CurrentLocation.MonsterLivingHere != null && _player.Potions.Any();
+                    cboPotions.Visible = _player.CurrentLocation.HasAMonster && _player.Potions.Any();
             }
         }
         private void btnNorth_Click(object sender, System.EventArgs e)

@@ -212,7 +212,7 @@ namespace SuperAdventure.Console
         }
         private static void AttackMonster()
         {
-            if (_player.CurrentLocation.MonsterLivingHere == null)
+            if (!_player.CurrentLocation.HasAMonster)
             {
                 WriteLine("There is nothing here to attack");
             }
@@ -273,9 +273,14 @@ namespace SuperAdventure.Console
                 {
                     WriteLine("You do not have the potion: {0}", inputPotionName);
                 }
+                else if (!_player.CurrentLocation.HasAMonster)
+                {
+                    WriteLine("You cannot drink a potion when you're not fighting");
+                }
                 else
                 {
                     _player.UsePotion(potionToDrink);
+
                 }
             }
         }

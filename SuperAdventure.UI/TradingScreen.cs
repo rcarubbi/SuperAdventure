@@ -110,7 +110,7 @@ namespace SuperAdventure.UI
                 // Remember, ColumnIndex = 0, for the first column
                 var itemID = dgvMyItems.Rows[e.RowIndex].Cells[0].Value;
                 // Get the Item object for the selected item row
-                Item itemBeingSold = World.ItemByID(Convert.ToInt32(itemID));
+                Item itemBeingSold = World.ItemById(Convert.ToInt32(itemID));
                 if (itemBeingSold.Price == World.UNSELLABLE_ITEM_PRICE)
                 {
                     MessageBox.Show("You cannot sell the " + itemBeingSold.Name);
@@ -133,7 +133,7 @@ namespace SuperAdventure.UI
                 // This gets the ID value of the item, from the hidden 1st column
                 var itemID = dgvVendorItems.Rows[e.RowIndex].Cells[0].Value;
                 // Get the Item object for the selected item row
-                Item itemBeingBought = World.ItemByID(Convert.ToInt32(itemID));
+                Item itemBeingBought = World.ItemById(Convert.ToInt32(itemID));
                 // Check if the player has enough gold to buy the item
                 if (_currentPlayer.Gold >= itemBeingBought.Price)
                 {

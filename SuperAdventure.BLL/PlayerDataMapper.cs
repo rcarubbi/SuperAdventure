@@ -60,7 +60,7 @@ namespace SuperAdventure.BLL
                                 int questId = (int)reader["QuestId"];
                                 bool isCompleted = (bool)reader["IsCompleted"];
                                 // Build the PlayerQuest item, for this row
-                                PlayerQuest playerQuest = new PlayerQuest(World.QuestByID(questId));
+                                PlayerQuest playerQuest = new PlayerQuest(World.QuestById(questId));
                                 playerQuest.IsCompleted = isCompleted;
                                 // Add the PlayerQuest to the player's property
                                 player.Quests.Add(playerQuest);
@@ -80,7 +80,7 @@ namespace SuperAdventure.BLL
                                 int inventoryItemID = (int)reader["InventoryItemId"];
                                 int quantity = (int)reader["Quantity"];
                                 // Add the item to the player's inventory
-                                player.AddItemToInventory(World.ItemByID(inventoryItemID), quantity);
+                                player.AddItemToInventory(World.ItemById(inventoryItemID), quantity);
                             }
                         }
                     }
@@ -217,7 +217,7 @@ namespace SuperAdventure.BLL
                     }
                 }
             }
-            catch (Exception ex)
+            catch 
             {
                 // We are going to ignore errors, for now.
             }

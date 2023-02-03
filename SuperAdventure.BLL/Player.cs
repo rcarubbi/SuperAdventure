@@ -59,8 +59,8 @@ namespace SuperAdventure.BLL
         public static Player CreateDefaultPlayer()
         {
             Player player = new Player(10, 10, 20, 0);
-            player.Inventory.Add(new InventoryItem(World.ItemByID(World.ITEM_ID_RUSTY_SWORD), 1));
-            player.CurrentLocation = World.LocationByID(World.LOCATION_ID_HOME);
+            player.Inventory.Add(new InventoryItem(World.ItemById(World.ITEM_ID_RUSTY_SWORD), 1));
+            player.CurrentLocation = World.LocationById(World.LOCATION_ID_HOME);
             return player;
         }
         public static Player CreatePlayerFromXmlString(string xmlPlayerData)
@@ -75,12 +75,12 @@ namespace SuperAdventure.BLL
                 int experiencePoints = Convert.ToInt32(playerData.SelectSingleNode("/Player/Stats/ExperiencePoints").InnerText);
                 Player player = new Player(currentHitPoints, maximumHitPoints, gold, experiencePoints);
                 int currentLocationID = Convert.ToInt32(playerData.SelectSingleNode("/Player/Stats/CurrentLocation").InnerText);
-                player.CurrentLocation = World.LocationByID(currentLocationID);
+                player.CurrentLocation = World.LocationById(currentLocationID);
 
                 if (playerData.SelectSingleNode("/Player/Stats/CurrentWeapon") != null)
                 {
                     int currentWeaponID = Convert.ToInt32(playerData.SelectSingleNode("/Player/Stats/CurrentWeapon").InnerText);
-                    player.CurrentWeapon = (Weapon)World.ItemByID(currentWeaponID);
+                    player.CurrentWeapon = (Weapon)World.ItemById(currentWeaponID);
                 }
 
 
@@ -88,13 +88,13 @@ namespace SuperAdventure.BLL
                 {
                     int id = Convert.ToInt32(node.Attributes["Id"].Value);
                     int quantity = Convert.ToInt32(node.Attributes["Quantity"].Value);
-                    player.AddItemToInventory(World.ItemByID(id), quantity);
+                    player.AddItemToInventory(World.ItemById(id), quantity);
                 }
                 foreach (XmlNode node in playerData.SelectNodes("/Player/PlayerQuests/PlayerQuest"))
                 {
                     int id = Convert.ToInt32(node.Attributes["Id"].Value);
                     bool isCompleted = Convert.ToBoolean(node.Attributes["IsCompleted"].Value);
-                    PlayerQuest playerQuest = new PlayerQuest(World.QuestByID(id))
+                    PlayerQuest playerQuest = new PlayerQuest(World.QuestById(id))
                     {
                         IsCompleted = isCompleted
                     };
@@ -111,7 +111,7 @@ namespace SuperAdventure.BLL
         public static Player CreatePlayerFromDatabase(int currentHitPoints, int maximumHitPoints, int gold, int experiencePoints, int currentLocationId)
         {
             Player player = new Player(currentHitPoints, maximumHitPoints, gold, experiencePoints);
-            player.MoveTo(World.LocationByID(currentLocationId));
+            player.MoveTo(World.LocationById(currentLocationId));
             return player;
         }
         public void MoveTo(Location location)
@@ -207,8 +207,7 @@ namespace SuperAdventure.BLL
 
             RemoveItemFromInventory(potion);
 
-            if (CurrentLocation.HasMonsterLivingHere)
-                LetTheMonsterAttack();
+            LetTheMonsterAttack();
         }
         public void AddItemToInventory(Item itemToAdd, int quantity = 1)
         {
@@ -366,7 +365,7 @@ namespace SuperAdventure.BLL
 
             if (CurrentMonster != null)
             {
-                RaiseMessage("You see a " + location.MonsterLivingHere.Name);
+                RaiseMessage("You see a " + CurrentMonster.Name);
             }
         }
         private bool PlayerDoesNotHaveTheRequiredItemToEnter(Location location) => !HasRequiredItemToEnterThisLocation(location);
@@ -433,7 +432,7 @@ namespace SuperAdventure.BLL
         }
         private void HealPlayer(int hitPointsToHeal) => CurrentHitPoints = Math.Min(CurrentHitPoints + hitPointsToHeal, MaximumHitPoints);
         private void CompletelyHeal() => CurrentHitPoints = MaximumHitPoints;
-        private void MoveHome() => MoveTo(World.LocationByID(World.LOCATION_ID_HOME));
+        private void MoveHome() => MoveTo(World.LocationById(World.LOCATION_ID_HOME));
         private void CreateNewChildXmlNode(XmlDocument document, XmlNode parentNode, string elementName, object value)
         {
             XmlNode node = document.CreateElement(elementName);
