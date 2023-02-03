@@ -1,0 +1,39 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32630.192
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SuperAdventure.UI", "SuperAdventure.UI\SuperAdventure.UI.csproj", "{A7A6DEC8-9FC4-44C9-AB19-8F0189D4ADA2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SuperAdventure.BLL", "SuperAdventure.BLL\SuperAdventure.BLL.csproj", "{0BD44674-FE8E-41A7-BA46-5A6FB2CD271C}"
+EndProject
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "SuperAdventure", "SuperAdventure\SuperAdventure.sqlproj", "{39600E85-8929-4A50-9007-BAE39DA68E80}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A7A6DEC8-9FC4-44C9-AB19-8F0189D4ADA2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A7A6DEC8-9FC4-44C9-AB19-8F0189D4ADA2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A7A6DEC8-9FC4-44C9-AB19-8F0189D4ADA2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A7A6DEC8-9FC4-44C9-AB19-8F0189D4ADA2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0BD44674-FE8E-41A7-BA46-5A6FB2CD271C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0BD44674-FE8E-41A7-BA46-5A6FB2CD271C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0BD44674-FE8E-41A7-BA46-5A6FB2CD271C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0BD44674-FE8E-41A7-BA46-5A6FB2CD271C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{39600E85-8929-4A50-9007-BAE39DA68E80}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{39600E85-8929-4A50-9007-BAE39DA68E80}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{39600E85-8929-4A50-9007-BAE39DA68E80}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{39600E85-8929-4A50-9007-BAE39DA68E80}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{39600E85-8929-4A50-9007-BAE39DA68E80}.Release|Any CPU.Build.0 = Release|Any CPU
+		{39600E85-8929-4A50-9007-BAE39DA68E80}.Release|Any CPU.Deploy.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E3733F09-533C-4497-AF91-DB38A775DFC0}
+	EndGlobalSection
+EndGlobal
