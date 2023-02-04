@@ -27,43 +27,48 @@ namespace SuperAdventure.BLL
                         // but this will ensure we only get one record in our SQL query results.
                         savedGameCommand.CommandText = "SELECT TOP 1 * FROM SavedGame";
                         // Use ExecuteReader when you expect the query to return a row, or rows
-                        SqlDataReader reader = savedGameCommand.ExecuteReader();
-                        // Check if the query did not return a row/record of data
-                        if (!reader.HasRows)
+                        using (SqlDataReader reader = savedGameCommand.ExecuteReader())
                         {
-                            // There is no data in the SavedGame table, 
-                            // so return null (no saved player data)
-                            return null;
+                            // Check if the query did not return a row/record of data
+                            if (!reader.HasRows)
+                            {
+                                // There is no data in the SavedGame table, 
+                                // so return null (no saved player data)
+                                return null;
+                            }
+                            // Get the row/record from the data reader
+                            reader.Read();
+                            // Get the column values for the row/record
+                            int currentHitPoints = (int)reader["CurrentHitPoints"];
+                            int maximumHitPoints = (int)reader["MaximumHitPoints"];
+                            int gold = (int)reader["Gold"];
+                            int experiencePoints = (int)reader["ExperiencePoints"];
+                            int currentLocationId = (int)reader["CurrentLocationId"];
+                            // Create the Player object, with the saved game values
+                            player = Player.CreatePlayerFromDatabase(currentHitPoints, maximumHitPoints, gold,
+                                experiencePoints, currentLocationId);
                         }
-                        // Get the row/record from the data reader
-                        reader.Read();
-                        // Get the column values for the row/record
-                        int currentHitPoints = (int)reader["CurrentHitPoints"];
-                        int maximumHitPoints = (int)reader["MaximumHitPoints"];
-                        int gold = (int)reader["Gold"];
-                        int experiencePoints = (int)reader["ExperiencePoints"];
-                        int currentLocationId = (int)reader["CurrentLocationId"];
-                        // Create the Player object, with the saved game values
-                        player = Player.CreatePlayerFromDatabase(currentHitPoints, maximumHitPoints, gold,
-                            experiencePoints, currentLocationId);
                     }
                     // Read the rows/records from the Quest table, and add them to the player
                     using (SqlCommand questCommand = connection.CreateCommand())
                     {
                         questCommand.CommandType = CommandType.Text;
                         questCommand.CommandText = "SELECT * FROM Quest";
-                        SqlDataReader reader = questCommand.ExecuteReader();
-                        if (reader.HasRows)
+                        using (SqlDataReader reader = questCommand.ExecuteReader())
                         {
-                            while (reader.Read())
+                            if (reader.HasRows)
                             {
-                                int questId = (int)reader["QuestId"];
-                                bool isCompleted = (bool)reader["IsCompleted"];
-                                // Build the PlayerQuest item, for this row
-                                PlayerQuest playerQuest = new PlayerQuest(World.QuestById(questId));
-                                playerQuest.IsCompleted = isCompleted;
-                                // Add the PlayerQuest to the player's property
-                                player.Quests.Add(playerQuest);
+                                while (reader.Read())
+                                {
+                                    int questId = (int)reader["QuestId"];
+                                    bool isCompleted = (bool)reader["IsCompleted"];
+                                    // Build the PlayerQuest item, for this row
+                                    PlayerQuest playerQuest = new PlayerQuest(World.QuestById(questId));
+                                    playerQuest.IsCompleted = isCompleted;
+                                    // Add the PlayerQuest to the player's property
+                                    if (player.PlayerDoesNotHaveThisQuest(playerQuest.Details))
+                                        player.Quests.Add(playerQuest);
+                                }
                             }
                         }
                     }
@@ -72,15 +77,17 @@ namespace SuperAdventure.BLL
                     {
                         inventoryCommand.CommandType = CommandType.Text;
                         inventoryCommand.CommandText = "SELECT * FROM Inventory";
-                        SqlDataReader reader = inventoryCommand.ExecuteReader();
-                        if (reader.HasRows)
+                        using (SqlDataReader reader = inventoryCommand.ExecuteReader())
                         {
-                            while (reader.Read())
+                            if (reader.HasRows)
                             {
-                                int inventoryItemID = (int)reader["InventoryItemId"];
-                                int quantity = (int)reader["Quantity"];
-                                // Add the item to the player's inventory
-                                player.AddItemToInventory(World.ItemById(inventoryItemID), quantity);
+                                while (reader.Read())
+                                {
+                                    int inventoryItemID = (int)reader["InventoryItemId"];
+                                    int quantity = (int)reader["Quantity"];
+                                    // Add the item to the player's inventory
+                                    player.AddItemToInventory(World.ItemById(inventoryItemID), quantity);
+                                }
                             }
                         }
                     }
