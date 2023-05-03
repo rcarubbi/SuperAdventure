@@ -13,38 +13,40 @@ namespace SuperAdventure.UI
             _currentPlayer = player;
             InitializeComponent();
             Text += " " + _currentPlayer.CurrentLocation.VendorWorkingHere.Name;
-            DataGridViewCellStyle rightAlignedCellStyle = new DataGridViewCellStyle();
-            rightAlignedCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            var rightAlignedCellStyle = new DataGridViewCellStyle
+            {
+                Alignment = DataGridViewContentAlignment.MiddleRight
+            };
             // Populate the datagrid for the player's inventory
             dgvMyItems.RowHeadersVisible = false;
             dgvMyItems.AutoGenerateColumns = false;
             // This hidden column holds the item ID, so we know which item to sell
-            dgvMyItems.Columns.Add(new DataGridViewTextBoxColumn
+            _ = dgvMyItems.Columns.Add(new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "ItemId",
                 Visible = false
             });
-            dgvMyItems.Columns.Add(new DataGridViewTextBoxColumn
+            _ = dgvMyItems.Columns.Add(new DataGridViewTextBoxColumn
             {
                 HeaderText = "Name",
                 Width = 100,
                 DataPropertyName = "Description"
             });
-            dgvMyItems.Columns.Add(new DataGridViewTextBoxColumn
+            _ = dgvMyItems.Columns.Add(new DataGridViewTextBoxColumn
             {
                 HeaderText = "Qty",
                 Width = 30,
                 DefaultCellStyle = rightAlignedCellStyle,
                 DataPropertyName = "Quantity"
             });
-            dgvMyItems.Columns.Add(new DataGridViewTextBoxColumn
+            _ = dgvMyItems.Columns.Add(new DataGridViewTextBoxColumn
             {
                 HeaderText = "Price",
                 Width = 35,
                 DefaultCellStyle = rightAlignedCellStyle,
                 DataPropertyName = "Price"
             });
-            dgvMyItems.Columns.Add(new DataGridViewButtonColumn
+            _ = dgvMyItems.Columns.Add(new DataGridViewButtonColumn
             {
                 Text = "Sell 1",
                 UseColumnTextForButtonValue = true,
@@ -60,25 +62,25 @@ namespace SuperAdventure.UI
             dgvVendorItems.RowHeadersVisible = false;
             dgvVendorItems.AutoGenerateColumns = false;
             // This hidden column holds the item ID, so we know which item to sell
-            dgvVendorItems.Columns.Add(new DataGridViewTextBoxColumn
+            _ = dgvVendorItems.Columns.Add(new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "ItemID",
                 Visible = false
             });
-            dgvVendorItems.Columns.Add(new DataGridViewTextBoxColumn
+            _ = dgvVendorItems.Columns.Add(new DataGridViewTextBoxColumn
             {
                 HeaderText = "Name",
                 Width = 100,
                 DataPropertyName = "Description"
             });
-            dgvVendorItems.Columns.Add(new DataGridViewTextBoxColumn
+            _ = dgvVendorItems.Columns.Add(new DataGridViewTextBoxColumn
             {
                 HeaderText = "Price",
                 Width = 35,
                 DefaultCellStyle = rightAlignedCellStyle,
                 DataPropertyName = "Price"
             });
-            dgvVendorItems.Columns.Add(new DataGridViewButtonColumn
+            _ = dgvVendorItems.Columns.Add(new DataGridViewButtonColumn
             {
                 Text = "Buy 1",
                 UseColumnTextForButtonValue = true,
@@ -91,10 +93,7 @@ namespace SuperAdventure.UI
             dgvVendorItems.CellClick += dgvVendorItems_CellClick;
         }
 
-        private void btnClose_Click(object sender, EventArgs e)
-        {
-            Close();
-        }
+        private void btnClose_Click(object sender, EventArgs e) => Close();
 
         private void dgvMyItems_CellClick(object sender, DataGridViewCellEventArgs e)
         {
@@ -113,7 +112,7 @@ namespace SuperAdventure.UI
                 Item itemBeingSold = World.ItemById(Convert.ToInt32(itemID));
                 if (itemBeingSold.Price == World.UNSELLABLE_ITEM_PRICE)
                 {
-                    MessageBox.Show("You cannot sell the " + itemBeingSold.Name);
+                    _ = MessageBox.Show("You cannot sell the " + itemBeingSold.Name);
                 }
                 else
                 {
@@ -144,7 +143,7 @@ namespace SuperAdventure.UI
                 }
                 else
                 {
-                    MessageBox.Show("You do not have enough gold to buy the " + itemBeingBought.Name);
+                    _ = MessageBox.Show("You do not have enough gold to buy the " + itemBeingBought.Name);
                 }
             }
         }

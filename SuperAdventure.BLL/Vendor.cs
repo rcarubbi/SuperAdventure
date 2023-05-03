@@ -21,14 +21,11 @@ namespace SuperAdventure.BLL
                 // They didn't have the item, so add it to their inventory
                 Inventory.Add(new InventoryItem(itemToAdd, 1));
             }
-           
+
             OnPropertyChanged("Inventory");
         }
-       
+
         public event PropertyChangedEventHandler PropertyChanged;
-        private void OnPropertyChanged(string name)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-        }
+        private void OnPropertyChanged(string name) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
     }
 }

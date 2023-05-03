@@ -15,6 +15,5 @@
         public string NamePlural { get; set; }
 
         public int Price { get; set; }
-
     }
 }

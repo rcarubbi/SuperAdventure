@@ -9,9 +9,9 @@ namespace SuperAdventure.BLL
         private static readonly List<Monster> _monsters = new List<Monster>();
         private static readonly List<Quest> _quests = new List<Quest>();
         private static readonly List<Location> _locations = new List<Location>();
-        
+
         public const int UNSELLABLE_ITEM_PRICE = -1;
-        
+
         public const int ITEM_ID_RUSTY_SWORD = 1;
         public const int ITEM_ID_RAT_TAIL = 2;
         public const int ITEM_ID_PIECE_OF_FUR = 3;
@@ -64,19 +64,17 @@ namespace SuperAdventure.BLL
 
         private static void PopulateMonsters()
         {
-            Monster rat = new Monster(MONSTER_ID_RAT, "Rat", 5, 3, 10, 3, 3);
+            var rat = new Monster(MONSTER_ID_RAT, "Rat", 5, 3, 10, 3, 3);
             rat.LootTable.Add(new LootItem(ItemById(ITEM_ID_RAT_TAIL), 75, false));
             rat.LootTable.Add(new LootItem(ItemById(ITEM_ID_PIECE_OF_FUR), 75, true));
 
-            Monster snake = new Monster(MONSTER_ID_SNAKE, "Snake", 5, 3, 10, 3, 3);
+            var snake = new Monster(MONSTER_ID_SNAKE, "Snake", 5, 3, 10, 3, 3);
             snake.LootTable.Add(new LootItem(ItemById(ITEM_ID_SNAKE_FANG), 75, false));
             snake.LootTable.Add(new LootItem(ItemById(ITEM_ID_SNAKESKIN), 75, true));
-          
 
-            Monster giantSpider = new Monster(MONSTER_ID_GIANT_SPIDER, "Giant spider", 20, 5, 40, 10, 10);
+            var giantSpider = new Monster(MONSTER_ID_GIANT_SPIDER, "Giant spider", 20, 5, 40, 10, 10);
             giantSpider.LootTable.Add(new LootItem(ItemById(ITEM_ID_SPIDER_FANG), 75, true));
             giantSpider.LootTable.Add(new LootItem(ItemById(ITEM_ID_SPIDER_SILK), 25, false));
-     
 
             _monsters.Add(rat);
             _monsters.Add(snake);
@@ -85,7 +83,7 @@ namespace SuperAdventure.BLL
 
         private static void PopulateQuests()
         {
-            Quest clearAlchemistGarden =
+            var clearAlchemistGarden =
                 new Quest(
                     QUEST_ID_CLEAR_ALCHEMIST_GARDEN,
                     "Clear the alchemist's garden",
@@ -95,7 +93,7 @@ namespace SuperAdventure.BLL
 
             clearAlchemistGarden.RewardItem = ItemById(ITEM_ID_HEALING_POTION);
 
-            Quest clearFarmersField =
+            var clearFarmersField =
                 new Quest(
                     QUEST_ID_CLEAR_FARMERS_FIELD,
                     "Clear the farmer's field",
@@ -112,33 +110,37 @@ namespace SuperAdventure.BLL
         private static void PopulateLocations()
         {
             // Create each location
-            Location home = new Location(LOCATION_ID_HOME, "Home", "Your house. You really need to clean up the place.");
+            var home = new Location(LOCATION_ID_HOME, "Home", "Your house. You really need to clean up the place.");
 
-            Location townSquare = new Location(LOCATION_ID_TOWN_SQUARE, "Town square", "You see a fountain.");
-            Vendor blackSmith = new Vendor("Bob the blacksmith");
+            var townSquare = new Location(LOCATION_ID_TOWN_SQUARE, "Town square", "You see a fountain.");
+            var blackSmith = new Vendor("Bob the blacksmith");
             blackSmith.AddItemToInventory(ItemById(ITEM_ID_RUSTY_SWORD));
             blackSmith.AddItemToInventory(ItemById(ITEM_ID_CLUB));
             townSquare.VendorWorkingHere = blackSmith;
 
-            Location alchemistHut = new Location(LOCATION_ID_ALCHEMIST_HUT, "Alchemist's hut", "There are many strange plants on the shelves.");
-            alchemistHut.QuestAvailableHere = QuestById(QUEST_ID_CLEAR_ALCHEMIST_GARDEN);
+            var alchemistHut = new Location(LOCATION_ID_ALCHEMIST_HUT, "Alchemist's hut", "There are many strange plants on the shelves.")
+            {
+                QuestAvailableHere = QuestById(QUEST_ID_CLEAR_ALCHEMIST_GARDEN)
+            };
 
-            Location alchemistsGarden = new Location(LOCATION_ID_ALCHEMISTS_GARDEN, "Alchemist's garden", "Many plants are growing here.");
+            var alchemistsGarden = new Location(LOCATION_ID_ALCHEMISTS_GARDEN, "Alchemist's garden", "Many plants are growing here.");
             alchemistsGarden.AddMonster(MONSTER_ID_RAT, 80);
             alchemistsGarden.AddMonster(MONSTER_ID_SNAKE, 20);
 
-            Location farmhouse = new Location(LOCATION_ID_FARMHOUSE, "Farmhouse", "There is a small farmhouse, with a farmer in front.");
-            farmhouse.QuestAvailableHere = QuestById(QUEST_ID_CLEAR_FARMERS_FIELD);
+            var farmhouse = new Location(LOCATION_ID_FARMHOUSE, "Farmhouse", "There is a small farmhouse, with a farmer in front.")
+            {
+                QuestAvailableHere = QuestById(QUEST_ID_CLEAR_FARMERS_FIELD)
+            };
 
-            Location farmersField = new Location(LOCATION_ID_FARM_FIELD, "Farmer's field", "You see rows of vegetables growing here.");
+            var farmersField = new Location(LOCATION_ID_FARM_FIELD, "Farmer's field", "You see rows of vegetables growing here.");
             farmersField.AddMonster(MONSTER_ID_RAT, 20);
             farmersField.AddMonster(MONSTER_ID_SNAKE, 80);
 
-            Location guardPost = new Location(LOCATION_ID_GUARD_POST, "Guard post", "There is a large, tough-looking guard here.", ItemById(ITEM_ID_ADVENTURER_PASS));
+            var guardPost = new Location(LOCATION_ID_GUARD_POST, "Guard post", "There is a large, tough-looking guard here.", ItemById(ITEM_ID_ADVENTURER_PASS));
 
-            Location bridge = new Location(LOCATION_ID_BRIDGE, "Bridge", "A stone bridge crosses a wide river.");
+            var bridge = new Location(LOCATION_ID_BRIDGE, "Bridge", "A stone bridge crosses a wide river.");
 
-            Location spiderField = new Location(LOCATION_ID_SPIDER_FIELD, "Forest", "You see spider webs covering the trees in this forest.");
+            var spiderField = new Location(LOCATION_ID_SPIDER_FIELD, "Forest", "You see spider webs covering the trees in this forest.");
             spiderField.AddMonster(MONSTER_ID_GIANT_SPIDER, 100);
 
             // Link the locations together

@@ -6,10 +6,10 @@ namespace SuperAdventure.BLL
     {
         private Item _details;
         private int _quantity;
-     
+
         public Item Details
         {
-            get { return _details; }
+            get => _details;
             set
             {
                 _details = value;
@@ -18,7 +18,7 @@ namespace SuperAdventure.BLL
         }
         public int Quantity
         {
-            get { return _quantity; }
+            get => _quantity;
             set
             {
                 _quantity = value;
@@ -26,18 +26,9 @@ namespace SuperAdventure.BLL
                 OnPropertyChanged("Description");
             }
         }
-        public int ItemId
-        {
-            get { return Details.Id; }
-        }
-        public string Description
-        {
-            get { return Quantity > 1 ? Details.NamePlural : Details.Name; }
-        }
-        public int Price
-        {
-            get { return Details.Price; }
-        }
+        public int ItemId => Details.Id;
+        public string Description => Quantity > 1 ? Details.NamePlural : Details.Name;
+        public int Price => Details.Price;
         public InventoryItem(Item details, int quantity)
         {
             Details = details;

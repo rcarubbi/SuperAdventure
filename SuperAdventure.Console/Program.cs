@@ -1,5 +1,4 @@
 ﻿using SuperAdventure.BLL;
-using System;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
@@ -30,7 +29,7 @@ namespace SuperAdventure.Console
                 // Display a prompt, so the user knows to type something
                 Write(">");
                 // Wait for the user to type something, and press the <Enter> key
-                string userInput = ReadLine();
+                var userInput = ReadLine();
                 // If they typed a blank line, loop back and wait for input again
                 if (string.IsNullOrWhiteSpace(userInput))
                 {
@@ -38,7 +37,7 @@ namespace SuperAdventure.Console
                 }
 
                 // Convert to lower-case, to make comparisons easier
-                string cleanedInput = userInput.ToLower();
+                var cleanedInput = userInput.ToLower();
 
                 // Save the current game data, and break out of the "while(true)" loop
                 if (cleanedInput == "exit")
@@ -224,6 +223,7 @@ namespace SuperAdventure.Console
                     // (or 'null', if they do not have any weapons)
                     _player.CurrentWeapon = _player.Weapons.FirstOrDefault();
                 }
+
                 if (_player.CurrentWeapon == null)
                 {
                     WriteLine("You do not have any weapons");
@@ -236,7 +236,7 @@ namespace SuperAdventure.Console
         }
         private static void EquipWeapon(string input)
         {
-            string inputWeaponName = input.Substring(6).Trim();
+            var inputWeaponName = input.Substring(6).Trim();
             if (string.IsNullOrEmpty(inputWeaponName))
             {
                 WriteLine("You must enter the name of the weapon to equip");
@@ -259,7 +259,7 @@ namespace SuperAdventure.Console
         }
         private static void DrinkPotion(string input)
         {
-            string inputPotionName = input.Substring(6).Trim();
+            var inputPotionName = input.Substring(6).Trim();
             if (string.IsNullOrEmpty(inputPotionName))
             {
                 WriteLine("You must enter the name of the potion to drink");
@@ -307,6 +307,7 @@ namespace SuperAdventure.Console
                             inventoryItem.Price);
                     }
                 }
+
                 WriteLine("");
                 WriteLine("VENDOR INVENTORY");
                 WriteLine("================");
@@ -332,7 +333,7 @@ namespace SuperAdventure.Console
             }
             else
             {
-                string itemName = input.Substring(4).Trim();
+                var itemName = input.Substring(4).Trim();
                 if (string.IsNullOrEmpty(itemName))
                 {
                     WriteLine("You must enter the name of the item to buy");
@@ -374,7 +375,7 @@ namespace SuperAdventure.Console
             }
             else
             {
-                string itemName = input.Substring(5).Trim();
+                var itemName = input.Substring(5).Trim();
                 if (string.IsNullOrEmpty(itemName))
                 {
                     WriteLine("You must enter the name of the item to sell");
@@ -403,7 +404,7 @@ namespace SuperAdventure.Console
         }
         private static bool LocationDoesNotHaveVendor()
         {
-            bool locationDoesNotHaveVendor = _player.CurrentLocation.VendorWorkingHere == null;
+            var locationDoesNotHaveVendor = _player.CurrentLocation.VendorWorkingHere == null;
 
             WriteLine("There is no vendor at this location");
 
@@ -422,14 +423,9 @@ namespace SuperAdventure.Console
             _player = PlayerDataMapper.CreateFromDatabase();
             if (_player == null)
             {
-                if (File.Exists(PLAYER_DATA_FILE_NAME))
-                {
-                    _player = Player.CreatePlayerFromXmlString(File.ReadAllText(PLAYER_DATA_FILE_NAME));
-                }
-                else
-                {
-                    _player = Player.CreateDefaultPlayer();
-                }
+                _player = File.Exists(PLAYER_DATA_FILE_NAME)
+                    ? Player.CreatePlayerFromXmlString(File.ReadAllText(PLAYER_DATA_FILE_NAME))
+                    : Player.CreateDefaultPlayer();
             }
         }
         private static void SaveGameData()

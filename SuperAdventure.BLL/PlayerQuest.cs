@@ -6,10 +6,10 @@ namespace SuperAdventure.BLL
     {
         private Quest _details;
         private bool _isCompleted;
-        
+
         public Quest Details
         {
-            get { return _details; }
+            get => _details;
             set
             {
                 _details = value;
@@ -18,7 +18,7 @@ namespace SuperAdventure.BLL
         }
         public bool IsCompleted
         {
-            get { return _isCompleted; }
+            get => _isCompleted;
             set
             {
                 _isCompleted = value;
@@ -26,17 +26,14 @@ namespace SuperAdventure.BLL
                 OnPropertyChanged("Name");
             }
         }
-        public string Name
-        {
-            get { return Details.Name; }
-        }
+        public string Name => Details.Name;
         public PlayerQuest(Quest details)
         {
             Details = details;
             IsCompleted = false;
         }
         public event PropertyChangedEventHandler PropertyChanged;
-       
+
         protected void OnPropertyChanged(string name) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
     }
 }

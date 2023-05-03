@@ -2,7 +2,7 @@
 {
     public class Weapon : Item
     {
-        public Weapon(int id, string name, string namePlural, int minimumDamage, int maximumDamage, int price) 
+        public Weapon(int id, string name, string namePlural, int minimumDamage, int maximumDamage, int price)
             : base(id, name, namePlural, price)
         {
             MinimumDamage = minimumDamage;

@@ -24,9 +24,7 @@ namespace SuperAdventure.BLL
         public bool HasAQuest => QuestAvailableHere != null;
         public bool DoesNotHaveAnItemRequiredToEnter => ItemRequiredToEnter == null;
 
-    
-
-        public Location(int id, string name, string description, 
+        public Location(int id, string name, string description,
             Item itemRequiredToEnter = null, Quest questAvailableHere = null, Monster monsterLivingHere = null)
         {
             Id = id;
@@ -56,15 +54,15 @@ namespace SuperAdventure.BLL
                 return null;
             }
             // Total the percentages of all monsters at this location.
-            int totalPercentages = _monstersAtLocation.Values.Sum();
+            var totalPercentages = _monstersAtLocation.Values.Sum();
             // Select a random number between 1 and the total (in case the total of percentages is not 100).
-            int randomNumber = RandomNumberGenerator.NumberBetween(1, totalPercentages);
-           
+            var randomNumber = RandomNumberGenerator.NumberBetween(1, totalPercentages);
+
             // Loop through the monster list, 
             // adding the monster's percentage chance of appearing to the runningTotal variable.
             // When the random number is lower than the runningTotal,
             // that is the monster to return.
-            int runningTotal = 0;
+            var runningTotal = 0;
 
             foreach (KeyValuePair<int, int> monsterKeyValuePair in _monstersAtLocation)
             {

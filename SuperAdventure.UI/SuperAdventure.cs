@@ -11,7 +11,7 @@ namespace SuperAdventure.UI
     {
         private const string PLAYER_DATA_FILE_NAME = "PlayerData.xml";
 
-        private Player _player;
+        private readonly Player _player;
 
         public SuperAdventure()
         {
@@ -21,31 +21,26 @@ namespace SuperAdventure.UI
 
             if (_player == null)
             {
-                if (File.Exists(PLAYER_DATA_FILE_NAME))
-                {
-                    _player = Player.CreatePlayerFromXmlString(File.ReadAllText(PLAYER_DATA_FILE_NAME));
-                }
-                else
-                {
-                    _player = Player.CreateDefaultPlayer();
-                }
+                _player = File.Exists(PLAYER_DATA_FILE_NAME)
+                    ? Player.CreatePlayerFromXmlString(File.ReadAllText(PLAYER_DATA_FILE_NAME))
+                    : Player.CreateDefaultPlayer();
             }
 
-            lblHitPoints.DataBindings.Add("Text", _player, "CurrentHitPoints");
-            lblGold.DataBindings.Add("Text", _player, "Gold");
-            lblExperience.DataBindings.Add("Text", _player, "ExperiencePoints");
-            lblLevel.DataBindings.Add("Text", _player, "Level");
+            _ = lblHitPoints.DataBindings.Add("Text", _player, "CurrentHitPoints");
+            _ = lblGold.DataBindings.Add("Text", _player, "Gold");
+            _ = lblExperience.DataBindings.Add("Text", _player, "ExperiencePoints");
+            _ = lblLevel.DataBindings.Add("Text", _player, "Level");
 
             dgvInventory.RowHeadersVisible = false;
             dgvInventory.AutoGenerateColumns = false;
             dgvInventory.DataSource = _player.Inventory;
-            dgvInventory.Columns.Add(new DataGridViewTextBoxColumn
+            _ = dgvInventory.Columns.Add(new DataGridViewTextBoxColumn
             {
                 HeaderText = "Name",
                 Width = 197,
                 DataPropertyName = "Description"
             });
-            dgvInventory.Columns.Add(new DataGridViewTextBoxColumn
+            _ = dgvInventory.Columns.Add(new DataGridViewTextBoxColumn
             {
                 HeaderText = "Quantity",
                 DataPropertyName = "Quantity"
@@ -55,13 +50,13 @@ namespace SuperAdventure.UI
             dgvQuests.AutoGenerateColumns = false;
             dgvQuests.DataSource = _player.Quests;
 
-            dgvQuests.Columns.Add(new DataGridViewTextBoxColumn
+            _ = dgvQuests.Columns.Add(new DataGridViewTextBoxColumn
             {
                 HeaderText = "Name",
                 Width = 197,
                 DataPropertyName = "Name"
             });
-            dgvQuests.Columns.Add(new DataGridViewTextBoxColumn
+            _ = dgvQuests.Columns.Add(new DataGridViewTextBoxColumn
             {
                 HeaderText = "Done?",
                 DataPropertyName = "IsCompleted"
@@ -75,8 +70,8 @@ namespace SuperAdventure.UI
             {
                 cboWeapons.SelectedItem = _player.CurrentWeapon;
             }
-            cboWeapons.SelectedIndexChanged += cboWeapons_SelectedIndexChanged;
 
+            cboWeapons.SelectedIndexChanged += cboWeapons_SelectedIndexChanged;
 
             cboPotions.DataSource = _player.Potions;
             cboPotions.DisplayMember = "Name";
@@ -95,6 +90,7 @@ namespace SuperAdventure.UI
             {
                 rtbMessages.Text += Environment.NewLine;
             }
+
             rtbMessages.SelectionStart = rtbMessages.Text.Length;
             rtbMessages.ScrollToCaret();
         }
@@ -109,6 +105,7 @@ namespace SuperAdventure.UI
                     btnUseWeapon.Visible = false;
                 }
             }
+
             if (propertyChangedEventArgs.PropertyName == "Potions")
             {
                 cboPotions.DataSource = _player.Potions;
@@ -118,56 +115,44 @@ namespace SuperAdventure.UI
                     btnUsePotion.Visible = false;
                 }
             }
+
             if (propertyChangedEventArgs.PropertyName == "CurrentLocation")
             {
                 // Show/hide available movement buttons
-                btnNorth.Visible = (_player.CurrentLocation.LocationToNorth != null);
-                btnEast.Visible = (_player.CurrentLocation.LocationToEast != null);
-                btnSouth.Visible = (_player.CurrentLocation.LocationToSouth != null);
-                btnWest.Visible = (_player.CurrentLocation.LocationToWest != null);
+                btnNorth.Visible = _player.CurrentLocation.LocationToNorth != null;
+                btnEast.Visible = _player.CurrentLocation.LocationToEast != null;
+                btnSouth.Visible = _player.CurrentLocation.LocationToSouth != null;
+                btnWest.Visible = _player.CurrentLocation.LocationToWest != null;
 
-                btnTrade.Visible = (_player.CurrentLocation.VendorWorkingHere != null);
+                btnTrade.Visible = _player.CurrentLocation.VendorWorkingHere != null;
 
                 // Display current location name and description
                 rtbLocation.Text = _player.CurrentLocation.Name + Environment.NewLine;
                 rtbLocation.Text += _player.CurrentLocation.Description + Environment.NewLine;
 
-
-                btnUseWeapon.Visible = 
+                btnUseWeapon.Visible =
                     cboWeapons.Visible = _player.CurrentLocation.HasAMonster && _player.Weapons.Any();
-                
-                btnUsePotion.Visible = 
+
+                btnUsePotion.Visible =
                     cboPotions.Visible = _player.CurrentLocation.HasAMonster && _player.Potions.Any();
             }
         }
-        private void btnNorth_Click(object sender, System.EventArgs e)
-        {
-            _player.MoveNorth();
-        }
-        private void btnEast_Click(object sender, System.EventArgs e)
-        {
-            _player.MoveEast();
-        }
-        private void btnSouth_Click(object sender, System.EventArgs e)
-        {
-            _player.MoveSouth();
-        }
-        private void btnWest_Click(object sender, System.EventArgs e)
-        {
-            _player.MoveWest();
-        }
+        private void btnNorth_Click(object sender, EventArgs e) => _player.MoveNorth();
+        private void btnEast_Click(object sender, EventArgs e) => _player.MoveEast();
+        private void btnSouth_Click(object sender, EventArgs e) => _player.MoveSouth();
+        private void btnWest_Click(object sender, EventArgs e) => _player.MoveWest();
 
-        private void btnUseWeapon_Click(object sender, System.EventArgs e)
+        private void btnUseWeapon_Click(object sender, EventArgs e)
         {
             // Get the currently selected weapon from the cboWeapons ComboBox
-            Weapon currentWeapon = (Weapon)cboWeapons.SelectedItem;
+            var currentWeapon = (Weapon)cboWeapons.SelectedItem;
 
             _player.UseWeapon(currentWeapon);
         }
-        private void btnUsePotion_Click(object sender, System.EventArgs e)
+        private void btnUsePotion_Click(object sender, EventArgs e)
         {
             // Get the currently selected potion from the combobox
-            HealingPotion potion = (HealingPotion)cboPotions.SelectedItem;
+            var potion = (HealingPotion)cboPotions.SelectedItem;
             _player.UsePotion(potion);
         }
         private void SuperAdventure_FormClosing(object sender, FormClosingEventArgs e)
@@ -175,15 +160,14 @@ namespace SuperAdventure.UI
             File.WriteAllText(PLAYER_DATA_FILE_NAME, _player.ToXmlString());
             PlayerDataMapper.SaveToDatabase(_player);
         }
-        private void cboWeapons_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            _player.CurrentWeapon = (Weapon)cboWeapons.SelectedItem;
-        }
+        private void cboWeapons_SelectedIndexChanged(object sender, EventArgs e) => _player.CurrentWeapon = (Weapon)cboWeapons.SelectedItem;
         private void btnTrade_Click(object sender, EventArgs e)
         {
-            TradingScreen tradingScreen = new TradingScreen(_player);
-            tradingScreen.StartPosition = FormStartPosition.CenterParent;
-            tradingScreen.ShowDialog(this);
+            var tradingScreen = new TradingScreen(_player)
+            {
+                StartPosition = FormStartPosition.CenterParent
+            };
+            _ = tradingScreen.ShowDialog(this);
         }
     }
 }

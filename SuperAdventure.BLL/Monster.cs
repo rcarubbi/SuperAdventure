@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace SuperAdventure.BLL
@@ -29,7 +28,7 @@ namespace SuperAdventure.BLL
 
         internal Monster NewInstanceOfMonster()
         {
-            Monster newMonster =
+            var newMonster =
                 new Monster(Id, Name, MaximumDamage, RewardExperiencePoints, RewardGold, CurrentHitPoints, MaximumHitPoints);
 
             // Add items to the lootedItems list, comparing a random number to the drop percentage

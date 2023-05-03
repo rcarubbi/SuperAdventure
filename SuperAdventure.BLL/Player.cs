@@ -58,7 +58,7 @@ namespace SuperAdventure.BLL
         }
         public static Player CreateDefaultPlayer()
         {
-            Player player = new Player(10, 10, 20, 0);
+            var player = new Player(10, 10, 20, 0);
             player.Inventory.Add(new InventoryItem(World.ItemById(World.ITEM_ID_RUSTY_SWORD), 1));
             player.CurrentLocation = World.LocationById(World.LOCATION_ID_HOME);
             return player;
@@ -67,39 +67,40 @@ namespace SuperAdventure.BLL
         {
             try
             {
-                XmlDocument playerData = new XmlDocument();
+                var playerData = new XmlDocument();
                 playerData.LoadXml(xmlPlayerData);
-                int currentHitPoints = Convert.ToInt32(playerData.SelectSingleNode("/Player/Stats/CurrentHitPoints").InnerText);
-                int maximumHitPoints = Convert.ToInt32(playerData.SelectSingleNode("/Player/Stats/MaximumHitPoints").InnerText);
-                int gold = Convert.ToInt32(playerData.SelectSingleNode("/Player/Stats/Gold").InnerText);
-                int experiencePoints = Convert.ToInt32(playerData.SelectSingleNode("/Player/Stats/ExperiencePoints").InnerText);
-                Player player = new Player(currentHitPoints, maximumHitPoints, gold, experiencePoints);
-                int currentLocationID = Convert.ToInt32(playerData.SelectSingleNode("/Player/Stats/CurrentLocation").InnerText);
+                var currentHitPoints = Convert.ToInt32(playerData.SelectSingleNode("/Player/Stats/CurrentHitPoints").InnerText);
+                var maximumHitPoints = Convert.ToInt32(playerData.SelectSingleNode("/Player/Stats/MaximumHitPoints").InnerText);
+                var gold = Convert.ToInt32(playerData.SelectSingleNode("/Player/Stats/Gold").InnerText);
+                var experiencePoints = Convert.ToInt32(playerData.SelectSingleNode("/Player/Stats/ExperiencePoints").InnerText);
+                var player = new Player(currentHitPoints, maximumHitPoints, gold, experiencePoints);
+                var currentLocationID = Convert.ToInt32(playerData.SelectSingleNode("/Player/Stats/CurrentLocation").InnerText);
                 player.CurrentLocation = World.LocationById(currentLocationID);
 
                 if (playerData.SelectSingleNode("/Player/Stats/CurrentWeapon") != null)
                 {
-                    int currentWeaponID = Convert.ToInt32(playerData.SelectSingleNode("/Player/Stats/CurrentWeapon").InnerText);
+                    var currentWeaponID = Convert.ToInt32(playerData.SelectSingleNode("/Player/Stats/CurrentWeapon").InnerText);
                     player.CurrentWeapon = (Weapon)World.ItemById(currentWeaponID);
                 }
 
-
                 foreach (XmlNode node in playerData.SelectNodes("/Player/InventoryItems/InventoryItem"))
                 {
-                    int id = Convert.ToInt32(node.Attributes["Id"].Value);
-                    int quantity = Convert.ToInt32(node.Attributes["Quantity"].Value);
+                    var id = Convert.ToInt32(node.Attributes["Id"].Value);
+                    var quantity = Convert.ToInt32(node.Attributes["Quantity"].Value);
                     player.AddItemToInventory(World.ItemById(id), quantity);
                 }
+
                 foreach (XmlNode node in playerData.SelectNodes("/Player/PlayerQuests/PlayerQuest"))
                 {
-                    int id = Convert.ToInt32(node.Attributes["Id"].Value);
-                    bool isCompleted = Convert.ToBoolean(node.Attributes["IsCompleted"].Value);
-                    PlayerQuest playerQuest = new PlayerQuest(World.QuestById(id))
+                    var id = Convert.ToInt32(node.Attributes["Id"].Value);
+                    var isCompleted = Convert.ToBoolean(node.Attributes["IsCompleted"].Value);
+                    var playerQuest = new PlayerQuest(World.QuestById(id))
                     {
                         IsCompleted = isCompleted
                     };
                     player.Quests.Add(playerQuest);
                 }
+
                 return player;
             }
             catch
@@ -110,7 +111,7 @@ namespace SuperAdventure.BLL
         }
         public static Player CreatePlayerFromDatabase(int currentHitPoints, int maximumHitPoints, int gold, int experiencePoints, int currentLocationId)
         {
-            Player player = new Player(currentHitPoints, maximumHitPoints, gold, experiencePoints);
+            var player = new Player(currentHitPoints, maximumHitPoints, gold, experiencePoints);
             player.MoveTo(World.LocationById(currentLocationId));
             return player;
         }
@@ -175,7 +176,7 @@ namespace SuperAdventure.BLL
         public void UseWeapon(Weapon currentWeapon)
         {
 
-            int damage = RandomNumberGenerator.NumberBetween(currentWeapon.MinimumDamage, currentWeapon.MaximumDamage);
+            var damage = RandomNumberGenerator.NumberBetween(currentWeapon.MinimumDamage, currentWeapon.MaximumDamage);
 
             if (damage == 0)
             {
@@ -222,6 +223,7 @@ namespace SuperAdventure.BLL
                 // They have the item in their inventory, so increase the quantity  
                 item.Quantity += quantity;
             }
+
             RaiseInventoryChangedEvent(itemToAdd);
         }
         public void RemoveItemFromInventory(Item itemToRemove, int quantity = 1)
@@ -240,7 +242,7 @@ namespace SuperAdventure.BLL
                 // If the quantity is zero, remove the item from the list
                 if (item.Quantity == 0)
                 {
-                    Inventory.Remove(item);
+                    _ = Inventory.Remove(item);
                 }
                 // Notify the UI that the inventory has changed
                 RaiseInventoryChangedEvent(itemToRemove);
@@ -248,15 +250,15 @@ namespace SuperAdventure.BLL
         }
         public string ToXmlString()
         {
-            XmlDocument playerData = new XmlDocument();
+            var playerData = new XmlDocument();
 
             // Create the top-level XML node
             XmlNode player = playerData.CreateElement("Player");
-            playerData.AppendChild(player);
+            _ = playerData.AppendChild(player);
 
             // Create the "Stats" child node to hold the other player statistics nodes
             XmlNode stats = playerData.CreateElement("Stats");
-            player.AppendChild(stats);
+            _ = player.AppendChild(stats);
 
             // Create the child nodes for the "Stats" node
             CreateNewChildXmlNode(playerData, stats, "CurrentHitPoints", CurrentHitPoints);
@@ -272,7 +274,7 @@ namespace SuperAdventure.BLL
 
             // Create the "InventoryItems" child node to hold each InventoryItem node
             XmlNode inventoryItems = playerData.CreateElement("InventoryItems");
-            player.AppendChild(inventoryItems);
+            _ = player.AppendChild(inventoryItems);
 
             // Create an "InventoryItem" node for each item in the player's inventory
             foreach (InventoryItem item in Inventory)
@@ -282,12 +284,12 @@ namespace SuperAdventure.BLL
                 AddXmlAttributeToNode(playerData, inventoryItem, "Id", item.Details.Id);
                 AddXmlAttributeToNode(playerData, inventoryItem, "Quantity", item.Quantity);
 
-                inventoryItems.AppendChild(inventoryItem);
+                _ = inventoryItems.AppendChild(inventoryItem);
             }
 
             // Create the "PlayerQuests" child node to hold each PlayerQuest node
             XmlNode playerQuests = playerData.CreateElement("PlayerQuests");
-            player.AppendChild(playerQuests);
+            _ = player.AppendChild(playerQuests);
 
             // Create a "PlayerQuest" node for each quest the player has acquired
             foreach (PlayerQuest quest in Quests)
@@ -297,7 +299,7 @@ namespace SuperAdventure.BLL
                 AddXmlAttributeToNode(playerData, playerQuest, "Id", quest.Details.Id);
                 AddXmlAttributeToNode(playerData, playerQuest, "IsCompleted", quest.IsCompleted);
 
-                playerQuests.AppendChild(playerQuest);
+                _ = playerQuests.AppendChild(playerQuest);
             }
 
             return playerData.InnerXml; // The XML document, as a string, so we can save the data to disk
@@ -328,7 +330,7 @@ namespace SuperAdventure.BLL
         public void AddExperiencePoints(int experiencePointsToAdd)
         {
             ExperiencePoints += experiencePointsToAdd;
-            MaximumHitPoints = (Level * 10);
+            MaximumHitPoints = Level * 10;
         }
         public void MarkPlayerQuestCompleted(Quest quest)
         {
@@ -418,7 +420,7 @@ namespace SuperAdventure.BLL
         }
         private void LetTheMonsterAttack()
         {
-            int damageToPlayer = RandomNumberGenerator.NumberBetween(0, CurrentMonster.MaximumDamage);
+            var damageToPlayer = RandomNumberGenerator.NumberBetween(0, CurrentMonster.MaximumDamage);
 
             RaiseMessage($"The {CurrentMonster.Name} did {damageToPlayer} points of damage.");
 
@@ -436,14 +438,14 @@ namespace SuperAdventure.BLL
         private void CreateNewChildXmlNode(XmlDocument document, XmlNode parentNode, string elementName, object value)
         {
             XmlNode node = document.CreateElement(elementName);
-            node.AppendChild(document.CreateTextNode(value.ToString()));
-            parentNode.AppendChild(node);
+            _ = node.AppendChild(document.CreateTextNode(value.ToString()));
+            _ = parentNode.AppendChild(node);
         }
         private void AddXmlAttributeToNode(XmlDocument document, XmlNode node, string attributeName, object value)
         {
             XmlAttribute attribute = document.CreateAttribute(attributeName);
             attribute.Value = value.ToString();
-            node.Attributes.Append(attribute);
+            _ = node.Attributes.Append(attribute);
         }
         private void RaiseInventoryChangedEvent(Item item)
         {
@@ -451,6 +453,7 @@ namespace SuperAdventure.BLL
             {
                 OnPropertyChanged("Weapons");
             }
+
             if (item is HealingPotion)
             {
                 OnPropertyChanged("Potions");

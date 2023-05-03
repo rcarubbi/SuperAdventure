@@ -1,5 +1,4 @@
-﻿using System;
-using System.Data;
+﻿using System.Data;
 using System.Data.SqlClient;
 
 namespace SuperAdventure.BLL
@@ -12,7 +11,7 @@ namespace SuperAdventure.BLL
             try
             {
                 // This is our connection to the database
-                using (SqlConnection connection = new SqlConnection(_connectionString))
+                using (var connection = new SqlConnection(_connectionString))
                 {
                     // Open the connection, so we can perform SQL commands
                     connection.Open();
@@ -37,13 +36,13 @@ namespace SuperAdventure.BLL
                                 return null;
                             }
                             // Get the row/record from the data reader
-                            reader.Read();
+                            _ = reader.Read();
                             // Get the column values for the row/record
-                            int currentHitPoints = (int)reader["CurrentHitPoints"];
-                            int maximumHitPoints = (int)reader["MaximumHitPoints"];
-                            int gold = (int)reader["Gold"];
-                            int experiencePoints = (int)reader["ExperiencePoints"];
-                            int currentLocationId = (int)reader["CurrentLocationId"];
+                            var currentHitPoints = (int)reader["CurrentHitPoints"];
+                            var maximumHitPoints = (int)reader["MaximumHitPoints"];
+                            var gold = (int)reader["Gold"];
+                            var experiencePoints = (int)reader["ExperiencePoints"];
+                            var currentLocationId = (int)reader["CurrentLocationId"];
                             // Create the Player object, with the saved game values
                             player = Player.CreatePlayerFromDatabase(currentHitPoints, maximumHitPoints, gold,
                                 experiencePoints, currentLocationId);
@@ -60,11 +59,13 @@ namespace SuperAdventure.BLL
                             {
                                 while (reader.Read())
                                 {
-                                    int questId = (int)reader["QuestId"];
-                                    bool isCompleted = (bool)reader["IsCompleted"];
+                                    var questId = (int)reader["QuestId"];
+                                    var isCompleted = (bool)reader["IsCompleted"];
                                     // Build the PlayerQuest item, for this row
-                                    PlayerQuest playerQuest = new PlayerQuest(World.QuestById(questId));
-                                    playerQuest.IsCompleted = isCompleted;
+                                    var playerQuest = new PlayerQuest(World.QuestById(questId))
+                                    {
+                                        IsCompleted = isCompleted
+                                    };
                                     // Add the PlayerQuest to the player's property
                                     if (player.PlayerDoesNotHaveThisQuest(playerQuest.Details))
                                         player.Quests.Add(playerQuest);
@@ -83,8 +84,8 @@ namespace SuperAdventure.BLL
                             {
                                 while (reader.Read())
                                 {
-                                    int inventoryItemID = (int)reader["InventoryItemId"];
-                                    int quantity = (int)reader["Quantity"];
+                                    var inventoryItemID = (int)reader["InventoryItemId"];
+                                    var quantity = (int)reader["Quantity"];
                                     // Add the item to the player's inventory
                                     player.AddItemToInventory(World.ItemById(inventoryItemID), quantity);
                                 }
@@ -99,13 +100,14 @@ namespace SuperAdventure.BLL
             {
                 // Ignore errors. If there is an error, this function will return a "null" player.
             }
+
             return null;
         }
         public static void SaveToDatabase(Player player)
         {
             try
             {
-                using (SqlConnection connection = new SqlConnection(_connectionString))
+                using (var connection = new SqlConnection(_connectionString))
                 {
                     // Open the connection, so we can perform SQL commands
                     connection.Open();
@@ -115,7 +117,7 @@ namespace SuperAdventure.BLL
                         existingRowCountCommand.CommandType = CommandType.Text;
                         existingRowCountCommand.CommandText = "SELECT count(*) FROM SavedGame";
                         // Use ExecuteScalar when your query will return one value
-                        int existingRowCount = (int)existingRowCountCommand.ExecuteScalar();
+                        var existingRowCount = (int)existingRowCountCommand.ExecuteScalar();
                         if (existingRowCount == 0)
                         {
                             // There is no existing row, so do an INSERT
@@ -128,19 +130,19 @@ namespace SuperAdventure.BLL
                                     "VALUES " +
                                     "(@CurrentHitPoints, @MaximumHitPoints, @Gold, @ExperiencePoints, @CurrentLocationId)";
                                 // Pass the values from the player object, to the SQL query, using parameters
-                                insertSavedGame.Parameters.Add("@CurrentHitPoints", SqlDbType.Int);
+                                _ = insertSavedGame.Parameters.Add("@CurrentHitPoints", SqlDbType.Int);
                                 insertSavedGame.Parameters["@CurrentHitPoints"].Value = player.CurrentHitPoints;
-                                insertSavedGame.Parameters.Add("@MaximumHitPoints", SqlDbType.Int);
+                                _ = insertSavedGame.Parameters.Add("@MaximumHitPoints", SqlDbType.Int);
                                 insertSavedGame.Parameters["@MaximumHitPoints"].Value = player.MaximumHitPoints;
-                                insertSavedGame.Parameters.Add("@Gold", SqlDbType.Int);
+                                _ = insertSavedGame.Parameters.Add("@Gold", SqlDbType.Int);
                                 insertSavedGame.Parameters["@Gold"].Value = player.Gold;
-                                insertSavedGame.Parameters.Add("@ExperiencePoints", SqlDbType.Int);
+                                _ = insertSavedGame.Parameters.Add("@ExperiencePoints", SqlDbType.Int);
                                 insertSavedGame.Parameters["@ExperiencePoints"].Value = player.ExperiencePoints;
-                                insertSavedGame.Parameters.Add("@CurrentLocationId", SqlDbType.Int);
+                                _ = insertSavedGame.Parameters.Add("@CurrentLocationId", SqlDbType.Int);
                                 insertSavedGame.Parameters["@CurrentLocationId"].Value = player.CurrentLocation.Id;
                                 // Perform the SQL command.
                                 // Use ExecuteNonQuery, because this query does not return any results.
-                                insertSavedGame.ExecuteNonQuery();
+                                _ = insertSavedGame.ExecuteNonQuery();
                             }
                         }
                         else
@@ -159,19 +161,19 @@ namespace SuperAdventure.BLL
                                 // Pass the values from the player object, to the SQL query, using parameters
                                 // Using parameters helps make your program more secure.
                                 // It will prevent SQL injection attacks.
-                                updateSavedGame.Parameters.Add("@CurrentHitPoints", SqlDbType.Int);
+                                _ = updateSavedGame.Parameters.Add("@CurrentHitPoints", SqlDbType.Int);
                                 updateSavedGame.Parameters["@CurrentHitPoints"].Value = player.CurrentHitPoints;
-                                updateSavedGame.Parameters.Add("@MaximumHitPoints", SqlDbType.Int);
+                                _ = updateSavedGame.Parameters.Add("@MaximumHitPoints", SqlDbType.Int);
                                 updateSavedGame.Parameters["@MaximumHitPoints"].Value = player.MaximumHitPoints;
-                                updateSavedGame.Parameters.Add("@Gold", SqlDbType.Int);
+                                _ = updateSavedGame.Parameters.Add("@Gold", SqlDbType.Int);
                                 updateSavedGame.Parameters["@Gold"].Value = player.Gold;
-                                updateSavedGame.Parameters.Add("@ExperiencePoints", SqlDbType.Int);
+                                _ = updateSavedGame.Parameters.Add("@ExperiencePoints", SqlDbType.Int);
                                 updateSavedGame.Parameters["@ExperiencePoints"].Value = player.ExperiencePoints;
-                                updateSavedGame.Parameters.Add("@CurrentLocationId", SqlDbType.Int);
+                                _ = updateSavedGame.Parameters.Add("@CurrentLocationId", SqlDbType.Int);
                                 updateSavedGame.Parameters["@CurrentLocationId"].Value = player.CurrentLocation.Id;
                                 // Perform the SQL command.
                                 // Use ExecuteNonQuery, because this query does not return any results.
-                                updateSavedGame.ExecuteNonQuery();
+                                _ = updateSavedGame.ExecuteNonQuery();
                             }
                         }
                     }
@@ -185,7 +187,7 @@ namespace SuperAdventure.BLL
                     {
                         deleteQuestsCommand.CommandType = CommandType.Text;
                         deleteQuestsCommand.CommandText = "DELETE FROM Quest";
-                        deleteQuestsCommand.ExecuteNonQuery();
+                        _ = deleteQuestsCommand.ExecuteNonQuery();
                     }
                     // Insert Quest rows, from the player object
                     foreach (PlayerQuest playerQuest in player.Quests)
@@ -194,11 +196,11 @@ namespace SuperAdventure.BLL
                         {
                             insertQuestCommand.CommandType = CommandType.Text;
                             insertQuestCommand.CommandText = "INSERT INTO Quest (QuestId, IsCompleted) VALUES (@QuestId, @IsCompleted)";
-                            insertQuestCommand.Parameters.Add("@QuestId", SqlDbType.Int);
+                            _ = insertQuestCommand.Parameters.Add("@QuestId", SqlDbType.Int);
                             insertQuestCommand.Parameters["@QuestId"].Value = playerQuest.Details.Id;
-                            insertQuestCommand.Parameters.Add("@IsCompleted", SqlDbType.Bit);
+                            _ = insertQuestCommand.Parameters.Add("@IsCompleted", SqlDbType.Bit);
                             insertQuestCommand.Parameters["@IsCompleted"].Value = playerQuest.IsCompleted;
-                            insertQuestCommand.ExecuteNonQuery();
+                            _ = insertQuestCommand.ExecuteNonQuery();
                         }
                     }
                     // Delete existing Inventory rows
@@ -206,7 +208,7 @@ namespace SuperAdventure.BLL
                     {
                         deleteInventoryCommand.CommandType = CommandType.Text;
                         deleteInventoryCommand.CommandText = "DELETE FROM Inventory";
-                        deleteInventoryCommand.ExecuteNonQuery();
+                        _ = deleteInventoryCommand.ExecuteNonQuery();
                     }
                     // Insert Inventory rows, from the player object
                     foreach (InventoryItem inventoryItem in player.Inventory)
@@ -215,16 +217,16 @@ namespace SuperAdventure.BLL
                         {
                             insertInventoryCommand.CommandType = CommandType.Text;
                             insertInventoryCommand.CommandText = "INSERT INTO Inventory (InventoryItemId, Quantity) VALUES (@InventoryItemId, @Quantity)";
-                            insertInventoryCommand.Parameters.Add("@InventoryItemId", SqlDbType.Int);
+                            _ = insertInventoryCommand.Parameters.Add("@InventoryItemId", SqlDbType.Int);
                             insertInventoryCommand.Parameters["@InventoryItemId"].Value = inventoryItem.Details.Id;
-                            insertInventoryCommand.Parameters.Add("@Quantity", SqlDbType.Int);
+                            _ = insertInventoryCommand.Parameters.Add("@Quantity", SqlDbType.Int);
                             insertInventoryCommand.Parameters["@Quantity"].Value = inventoryItem.Quantity;
-                            insertInventoryCommand.ExecuteNonQuery();
+                            _ = insertInventoryCommand.ExecuteNonQuery();
                         }
                     }
                 }
             }
-            catch 
+            catch
             {
                 // We are going to ignore errors, for now.
             }

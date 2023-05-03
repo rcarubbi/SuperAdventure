@@ -7,7 +7,7 @@ namespace SuperAdventure.BLL
         private int _currentHitPoints;
         public int CurrentHitPoints
         {
-            get { return _currentHitPoints; }
+            get => _currentHitPoints;
             set
             {
                 _currentHitPoints = value;
@@ -17,7 +17,7 @@ namespace SuperAdventure.BLL
 
         public int MaximumHitPoints { get; set; }
 
-        public bool IsDead { get { return CurrentHitPoints <= 0; } }
+        public bool IsDead => CurrentHitPoints <= 0;
 
         public LivingCreature(int currentHitPoints, int maximumHitPoints)
         {
@@ -26,9 +26,6 @@ namespace SuperAdventure.BLL
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
-        protected void OnPropertyChanged(string name)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-        }
+        protected void OnPropertyChanged(string name) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
     }
 }
